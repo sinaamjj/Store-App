@@ -7,7 +7,7 @@
   align-items: flex-start;
   justify-content: flex-end;
   background-color: #fff;
-  border: 2px solid #e2e2e2;
+  border: 2px dashed #e2e2e2;
   border-radius: 20px;
 }
 
