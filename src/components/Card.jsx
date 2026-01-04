@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styles from "./Card.module.css";
 
 import { shortenText } from "../helper/helper";
@@ -8,18 +8,45 @@ import { TbShoppingBagCheck } from "react-icons/tb";
 
 function Card({ data }) {
   const { id, title, image, price } = data;
-  console.log(data);
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    navigate(`/products/${id}`);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      handleNavigate();
+    }
+  };
+
   return (
-    <div className={styles.card}>
+    <div
+      className={styles.card}
+      onClick={handleNavigate}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+    >
       <img src={image} alt={title} />
       <h3>{shortenText(title)}</h3>
       <p>{price} $</p>
       <div className={styles.actions}>
-        <Link to={`/products/${id}`}>
+        <button
+          type="button"
+          className={styles.detailsButton}
+          onClick={(event) => {
+            event.stopPropagation();
+            handleNavigate();
+          }}
+        >
           <TbListDetails />
-        </Link>
+        </button>
         <div>
-          <button>
+          <button
+            type="button"
+            onClick={(event) => event.stopPropagation()}
+          >
             <TbShoppingBagCheck />
           </button>
         </div>

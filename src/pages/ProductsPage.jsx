@@ -15,39 +15,57 @@ function ProductsPage() {
   const [displayed, setDisplayed] = useState([]);
   const [search, setSearch] = useState("");
   const [query, setQuery] = useState({});
+  const activeCategory = query.category ?? "all";
+
+  const categories = [
+    { label: "All", value: "all" },
+    { label: "Electronics", value: "electronics" },
+    { label: "Jewelery", value: "jewelery" },
+    { label: "Men's Clothing", value: "men's clothing" },
+    { label: "Women's Clothing", value: "women's clothing" },
+  ];
 
   useEffect(() => {
-    setDisplayed(products);
-  }, [products]);
+    let filtered = products;
+    const { category, search } = query;
 
-  useEffect(() => {
-    console.log(query);
-  }, [query]);
+    if (category && category !== "all") {
+      filtered = filtered.filter(
+        (product) => product.category.toLowerCase() === category
+      );
+    }
+
+    if (search) {
+      filtered = filtered.filter((product) =>
+        product.title.toLowerCase().includes(search)
+      );
+    }
+
+    setDisplayed(filtered);
+  }, [products, query]);
 
   const searchHandler = () => {
     setQuery((query) => ({ ...query, search }));
   };
 
-  const categoryHandler = (event) => {
-    const { tagName } = event.target;
-
-    if (tagName !== "LI") return;
-
-    const category = event.target.innerText.toLowerCase();
+  const categoryHandler = (category) => {
     setQuery((query) => ({ ...query, category }));
   };
 
   return (
     <>
-      <div>
-        <input
-          type="text"
-          placeholder="Search ..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value.toLowerCase().trim())}
-        />
-        <button onClick={searchHandler}>
-          <ImSearch />
+      <div className={styles.searchBar}>
+        <div className={styles.searchField}>
+          <ImSearch className={styles.searchIcon} />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value.toLowerCase().trim())}
+          />
+        </div>
+        <button className={styles.searchButton} onClick={searchHandler}>
+          Search
         </button>
       </div>
       <div className={styles.container}>
@@ -57,19 +75,29 @@ function ProductsPage() {
             <Card key={p.id} data={p} />
           ))}
         </div>
-        <div>
-          <div>
+        <aside className={styles.sidebar}>
+          <div className={styles.categoryHeader}>
             <FaListUl />
             <p>Categories</p>
           </div>
-          <ul onClick={categoryHandler}>
-            <li>All</li>
-            <li>Electronics</li>
-            <li>Jewelery</li>
-            <li>Men's Clothing</li>
-            <li>Women's Clothing</li>
+          <ul className={styles.categoryList}>
+            {categories.map((category) => (
+              <li key={category.value} className={styles.categoryItem}>
+                <button
+                  type="button"
+                  className={`${styles.categoryButton} ${
+                    activeCategory === category.value
+                      ? styles.activeCategory
+                      : ""
+                  }`}
+                  onClick={() => categoryHandler(category.value)}
+                >
+                  {category.label}
+                </button>
+              </li>
+            ))}
           </ul>
-        </div>
+        </aside>
       </div>
     </>
   );
