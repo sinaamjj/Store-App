@@ -9,6 +9,7 @@
   background-color: #fff;
   border: 2px dashed #e2e2e2;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .card img {
@@ -38,11 +39,17 @@
   align-items: center;
 }
 
-.actions a {
+.actions button {
   font-size: 1.5rem;
   height: 25px;
   color: #fe5d42;
+  background: none;
+  border: none;
   cursor: pointer;
+}
+
+.detailsButton {
+  padding: 0;
 }
 
 .actions div {
